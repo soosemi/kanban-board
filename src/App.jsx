@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-
-import Board from './Components/Board/Board';
-
-import './App.css';
 import Editable from './Components/Editabled/Editable';
+import Board from './Components/Board/Board';
+import './App.css';
 
 function App() {
   const [boards, setBoards] = useState(JSON.parse(localStorage.getItem('prac-kanban')) || []);

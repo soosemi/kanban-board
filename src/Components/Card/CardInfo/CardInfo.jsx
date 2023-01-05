@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Calendar, List, Tag, Trash, Type, X, User, Hash } from 'react-feather';
-
 import Modal from '../../Modal/Modal';
 import Editable from '../../Editabled/Editable';
-
 import styled from 'styled-components';
 
 function CardInfo(props) {

@@ -1,15 +1,10 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-
 import Card from '../Card/Card';
-// import Dropdown from '../Dropdown/Dropdown';
 import Editable from '../Editabled/Editable';
-
 import './Board.css';
 
 function Board(props) {
-  // const [showDropdown, setShowDropdown] = useState(false);
-
   return (
     <BoardWrapper>
       <BoardHeader>

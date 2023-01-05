@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
-
 import { X } from 'react-feather';
 import styled from 'styled-components';
-
 import './Editable.css';
 
 function Editable(props) {

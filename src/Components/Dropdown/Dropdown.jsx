@@ -1,5 +1,4 @@
 import React, { useEffect, useRef } from 'react';
-
 import './Dropdown.css';
 
 function Dropdown(props) {
