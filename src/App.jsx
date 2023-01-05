@@ -135,14 +135,14 @@ function App() {
             />
           ))}
           <div className="app_boards_last">
-            <Editable
+            {/* <Editable
               displayClass="app_boards_add-board"
               editClass="app_boards_add-board_edit"
               placeholder="Enter Board Name"
               text="Add Board"
               buttonText="Add Board"
               onSubmit={addboardHandler}
-            />
+            /> */}
           </div>
         </BoardList>
       </Container>
