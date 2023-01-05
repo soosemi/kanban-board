@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import styled from 'styled-components';
 
 import Board from './Components/Board/Board';
 
@@ -6,9 +7,7 @@ import './App.css';
 import Editable from './Components/Editabled/Editable';
 
 function App() {
-  const [boards, setBoards] = useState(
-    JSON.parse(localStorage.getItem('prac-kanban', board)) || [],
-  );
+  const [boards, setBoards] = useState(JSON.parse(localStorage.getItem('prac-kanban')) || []);
 
   const [targetCard, setTargetCard] = useState({
     bid: '',
@@ -16,7 +15,6 @@ function App() {
   });
 
   const addboardHandler = (name) => {
-    //삭제
     const tempBoards = [...boards];
 
     tempBoards.push({
@@ -42,8 +40,9 @@ function App() {
 
     const tempBoards = [...board];
     tempBoards[index].cards.push({
-      id: Date.now() + Math.random() * 2,
+      id: Math.floor(Date.now() + Math.random() * 2),
       title,
+      assign: '',
       labels: [],
       date: '',
       tasks: [],
@@ -52,10 +51,10 @@ function App() {
   };
 
   const removeCard = (bid, cid) => {
-    const index = boards.findIndex((item) => item.id === bid);
+    const index = board.findIndex((item) => item.id === bid);
     if (index < 0) return;
 
-    const tempBoards = [...boards];
+    const tempBoards = [...board];
     const cards = tempBoards[index].cards;
 
     const cardIndex = cards.findIndex((item) => item.id === cid);
@@ -119,12 +118,12 @@ function App() {
   }, [board]);
 
   return (
-    <div className="app">
-      <div className="app_nav">
+    <Wrapper>
+      <NavBar>
         <h1>Issue tracker</h1>
-      </div>
-      <div className="app_boards_container">
-        <div className="app_boards">
+      </NavBar>
+      <Container>
+        <BoardList>
           {board.map((item) => (
             <Board
               key={item.id}
@@ -147,15 +146,15 @@ function App() {
               onSubmit={addboardHandler}
             />
           </div>
-        </div>
-      </div>
-    </div>
+        </BoardList>
+      </Container>
+    </Wrapper>
   );
 }
 
 export default App;
 
-const board = [
+let board = [
   {
     id: 1,
     title: 'Todos',
@@ -172,3 +171,35 @@ const board = [
     cards: [],
   },
 ];
+
+const Wrapper = styled.div`
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+`;
+
+const NavBar = styled.div`
+  padding: 30px;
+  box-shadow: 0 1px 20px rgba(56, 40, 40, 0.05);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  background-color: #fff;
+`;
+
+const Container = styled.div`
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  overflow-x: auto;
+  padding-top: 20px;
+`;
+
+const BoardList = styled.div`
+  height: 100%;
+  width: fit-content;
+  padding: 10px 30px;
+  display: flex;
+  gap: 30px;
+`;

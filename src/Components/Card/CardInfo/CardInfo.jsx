@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { Calendar, CheckSquare, List, Tag, Trash, Type, X } from 'react-feather';
+import { Calendar, List, Tag, Trash, Type, X, User, Hash } from 'react-feather';
 
 import Modal from '../../Modal/Modal';
 import Editable from '../../Editabled/Editable';
 
-import './CardInfo.css';
+import styled from 'styled-components';
 
 function CardInfo(props) {
-  const colors = ['#a8193d', '#4fcc25', '#1ebffa', '#8da377', '#9975bd', '#cf61a1', '#240959'];
+  const colors = ['#a8193d', '#4fcc25', '#1ebffa'];
 
   const [selectedColor, setSelectedColor] = useState();
   const [values, setValues] = useState({
@@ -16,6 +16,9 @@ function CardInfo(props) {
 
   const updateTitle = (value) => {
     setValues({ ...values, title: value });
+  };
+  const updateAssign = (value) => {
+    setValues({ ...values, assign: value });
   };
 
   const updateDesc = (value) => {
@@ -42,48 +45,6 @@ function CardInfo(props) {
     });
   };
 
-  const addTask = (value) => {
-    const task = {
-      id: Date.now() + Math.random() * 2,
-      completed: false,
-      text: value,
-    };
-    setValues({
-      ...values,
-      tasks: [...values.tasks, task],
-    });
-  };
-
-  const removeTask = (id) => {
-    const tasks = [...values.tasks];
-
-    const tempTasks = tasks.filter((item) => item.id !== id);
-    setValues({
-      ...values,
-      tasks: tempTasks,
-    });
-  };
-
-  const updateTask = (id, value) => {
-    const tasks = [...values.tasks];
-
-    const index = tasks.findIndex((item) => item.id === id);
-    if (index < 0) return;
-
-    tasks[index].completed = value;
-
-    setValues({
-      ...values,
-      tasks,
-    });
-  };
-
-  const calculatePercent = () => {
-    if (!values.tasks?.length) return 0;
-    const completed = values.tasks?.filter((item) => item.completed)?.length;
-    return (completed / values.tasks?.length) * 100;
-  };
-
   const updateDate = (date) => {
     if (!date) return;
 
@@ -99,59 +60,80 @@ function CardInfo(props) {
 
   return (
     <Modal onClose={props.onClose}>
-      <div className="cardinfo">
-        <div className="cardinfo_box">
-          <div className="cardinfo_box_title">
+      <CardInfoWrapper>
+        <CardInfoBox>
+          <Title>
+            <Hash />
+            {/* <input type="text" text={cards.id} disabled /> */}
+            <Editable text={values.id} disabled={true} />
+          </Title>
+        </CardInfoBox>
+        <CardInfoBox>
+          <Title>
             <Type />
             <p>Title</p>
-          </div>
+          </Title>
           <Editable
             defaultValue={values.title}
             text={values.title}
             placeholder="Enter Title"
             onSubmit={updateTitle}
           />
-        </div>
+        </CardInfoBox>
 
-        <div className="cardinfo_box">
-          <div className="cardinfo_box_title">
+        <CardInfoBox>
+          <Title>
+            <User />
+            <p>Assign</p>
+          </Title>
+          <Editable
+            defaultValue={values.assign}
+            text={values.assign}
+            placeholder="Enter Assign"
+            onSubmit={updateAssign}
+          />
+        </CardInfoBox>
+
+        <CardInfoBox>
+          <Title>
             <List />
-            <p>Description</p>
-          </div>
+            <p>Contents</p>
+          </Title>
           <Editable
             defaultValue={values.desc}
             text={values.desc || 'Add a Description'}
             placeholder="Enter description"
             onSubmit={updateDesc}
+            isContent={true}
           />
-        </div>
+        </CardInfoBox>
 
-        <div className="cardinfo_box">
-          <div className="cardinfo_box_title">
+        <CardInfoBox>
+          <Title>
             <Calendar />
-            <p>Date</p>
-          </div>
+            <p>Valid Date</p>
+          </Title>
           <input
-            type="date"
+            type="datetime-local"
             defaultValue={values.date}
             min={new Date().toISOString().substr(0, 10)}
             onChange={(event) => updateDate(event.target.value)}
           />
-        </div>
+        </CardInfoBox>
 
-        <div className="cardinfo_box">
-          <div className="cardinfo_box_title">
+        <CardInfoBox>
+          <Title>
             <Tag />
-            <p>Labels</p>
-          </div>
-          <div className="cardinfo_box_labels">
+            <p>Status</p>
+          </Title>
+          <Labels>
             {values.labels?.map((item, index) => (
               <label key={index} style={{ backgroundColor: item.color, color: '#fff' }}>
                 {item.text}
                 <X onClick={() => removeLabel(item)} />
               </label>
             ))}
-          </div>
+          </Labels>
           <ul>
             {colors.map((item, index) => (
               <li
@@ -167,40 +149,91 @@ function CardInfo(props) {
             placeholder="Enter label text"
             onSubmit={(value) => addLabel({ color: selectedColor, text: value })}
           />
-        </div>
-
-        <div className="cardinfo_box">
-          <div className="cardinfo_box_title">
-            <CheckSquare />
-            <p>Tasks</p>
-          </div>
-          <div className="cardinfo_box_progress-bar">
-            <div
-              className="cardinfo_box_progress"
-              style={{
-                width: `${calculatePercent()}%`,
-                backgroundColor: calculatePercent() === 100 ? 'limegreen' : '',
-              }}
-            />
-          </div>
-          <div className="cardinfo_box_task_list">
-            {values.tasks?.map((item) => (
-              <div key={item.id} className="cardinfo_box_task_checkbox">
-                <input
-                  type="checkbox"
-                  defaultChecked={item.completed}
-                  onChange={(event) => updateTask(item.id, event.target.checked)}
-                />
-                <p className={item.completed ? 'completed' : ''}>{item.text}</p>
-                <Trash onClick={() => removeTask(item.id)} />
-              </div>
-            ))}
-          </div>
-          <Editable text={'Add a Task'} placeholder="Enter task" onSubmit={addTask} />
-        </div>
-      </div>
+        </CardInfoBox>
+      </CardInfoWrapper>
     </Modal>
   );
 }
 
 export default CardInfo;
+
+const CardInfoWrapper = styled.div`
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  min-width: 550px;
+  width: fit-content;
+  max-width: 650px;
+  height: fit-content;
+`;
+
+const CardInfoBox = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+
+  ul {
+    display: flex;
+    gap: 15px;
+    margin-left: 20px;
+  }
+
+  ul li {
+    list-style: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+  ul .li_active {
+    box-shadow: 0 0 0 3px yellow;
+  }
+
+  input[type='date'] {
+    width: fit-content;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    outline: none;
+    font-size: 1rem;
+    padding: 10px;
+  }
+`;
+
+const Title = styled.div`
+  display: flex;
+  gap: 10px;
+  align-items: center;
+
+  p {
+    font-weight: bold;
+    font-size: 1.2rem;
+  }
+  svg {
+    height: 18px;
+    width: 18px;
+  }
+`;
+
+const Labels = styled.div`
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+
+  label {
+    border-radius: 40px;
+    background-color: gray;
+    color: #fff;
+    padding: 4px 8px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  label svg {
+    height: 16px;
+    width: 16px;
+    cursor: pointer;
+  }
+`;

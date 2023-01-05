@@ -1,31 +1,24 @@
 import React, { useState } from 'react';
-import { MoreHorizontal } from 'react-feather';
+import styled from 'styled-components';
 
 import Card from '../Card/Card';
-import Dropdown from '../Dropdown/Dropdown';
+// import Dropdown from '../Dropdown/Dropdown';
 import Editable from '../Editabled/Editable';
 
 import './Board.css';
 
 function Board(props) {
-  const [showDropdown, setShowDropdown] = useState(false);
+  // const [showDropdown, setShowDropdown] = useState(false);
 
   return (
-    <div className="board">
-      <div className="board_header">
-        <p className="board_header_title">
+    <BoardWrapper>
+      <BoardHeader>
+        <BoardHeaderTitle>
           {props.board?.title}
           <span>{props.board?.cards?.length || 0}</span>
-        </p>
-        <div className="board_header_title_more" onClick={() => setShowDropdown(true)}>
-          {/* <MoreHorizontal /> */}
-          {showDropdown && (
-            <Dropdown class="board_dropdown" onClose={() => setShowDropdown(false)}>
-              <p onClick={() => props.removeBoard()}>Delete Board</p>
-            </Dropdown>
-          )}
-        </div>
-      </div>
+        </BoardHeaderTitle>
+      </BoardHeader>
+
       <div className="board_cards custom-scroll">
         {props.board?.cards?.map((item) => (
           <Card
@@ -46,8 +39,35 @@ function Board(props) {
           onSubmit={(value) => props.addCard(props.board?.id, value)}
         />
       </div>
-    </div>
+    </BoardWrapper>
   );
 }
 
 export default Board;
+
+const BoardWrapper = styled.div`
+  width: 290px;
+  max-height: 100%;
+  flex-basis: 290px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+`;
+
+const BoardHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const BoardHeaderTitle = styled.p`
+  font-weight: bold;
+  font-size: 1rem;
+  display: flex;
+  gap: 5px;
+  align-items: center;
+
+  span {
+    color: rgb(145, 145, 145);
+  }
+`;
