@@ -7,3 +7,6 @@ yarn vite // 실행
 
 배포링크 :
 https://kanban-board-g7i2p1nxb-ericabyss.vercel.app
+
+
+<img src="./public/images/ss1.png" />
